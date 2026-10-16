@@ -1,0 +1,8 @@
+# Naive single-stage image (the old Dockerfile1): JDK + Maven + sources + ~/.m2 all ship to runtime,
+# it runs as root, and any source change re-downloads every dependency.
+FROM maven:3.9.9-eclipse-temurin-21
+WORKDIR /usr/src/demo
+COPY . .
+RUN mvn -q -DskipTests package
+EXPOSE 8080
+CMD ["java", "-jar", "target/app.jar"]

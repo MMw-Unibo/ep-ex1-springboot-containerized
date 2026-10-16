@@ -1,0 +1,42 @@
+services:
+  mongo:
+    image: mongo:7.0
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: mongoadmin
+      MONGO_INITDB_ROOT_PASSWORD: secret     # lab only: real secrets never live in the file
+    volumes:
+      - mongodata:/data/db                   # data outlives the container
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping')"]
+      interval: 5s
+      retries: 20
+
+  mongo-express:
+    image: mongo-express:1.0.2
+    ports:
+      - "8081:8081"
+    environment:
+      ME_CONFIG_MONGODB_URL: mongodb://mongoadmin:secret@mongo:27017/
+    depends_on:
+      mongo:
+        condition: service_healthy
+    restart: unless-stopped
+
+  backend:
+    build: ./demo
+    image: demo:layered
+    ports:
+      - "8080:8080"
+    environment:
+      MONGO_USER: mongoadmin
+      MONGO_PSWD: secret
+      MONGO_HOST: mongo                      # service name, resolved by Compose DNS
+      MONGO_PORT: 27017
+    depends_on:
+      mongo:
+        condition: service_healthy           # plain depends_on waits for "started", not "ready"
+    mem_limit: 512m
+    restart: unless-stopped
+
+volumes:
+  mongodata:
