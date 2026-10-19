@@ -1,8 +1,7 @@
 # EP-EX1: Containerized Spring Boot (Spring Data REST + MongoDB)
 
 Course C9576 Enterprise Platforms M, attaches to EP5 (Containerization as a platform).
-Successor of the 2024/25 lab `MMw-Unibo/dsm-ex2-SpringDataREST_Containerized`: same app and
-progression (Mongo by IP → naive image → multi-stage image → Compose), updated to Spring Boot 3.3 /
+Progression: Mongo by IP → naive image → multi-stage image → Compose, updated to Spring Boot 3.3 /
 Java 21 and extended with the EP5 topics (layer cache, user-defined networks, non-root, JVM memory
 limits, healthchecks, volumes, restart policies).
 
